@@ -12,6 +12,12 @@ public class SudokuResolver implements ISudokuResolver {
 
 		if (sudokuCells != null) {
 			
+			//finché il numero di celle non risolte 
+			//del sudoku non é = 0
+			//vai avanti finché sudoku non é resolved.
+			//potrebbe essereun evento, con i sottoscrittori dell'evento ? : (
+			//non lo so...
+			
 			for (int r = 0; r < sudokuCells.length; r++) {
 				for (int c = 0; c < sudokuCells.length; c++) {
 
@@ -24,9 +30,7 @@ public class SudokuResolver implements ISudokuResolver {
 						//Allora richiamo un metodo che é risolvi La cella
 						//che dovrebbe essere ricorsivo
 						
-						//vai avanti finché sudoku non é resolved.
-						//potrebbe essereun evento, con i sottoscrittori dell'evento ? : (
-						//non lo so...
+						
 						
 
 						List<Integer> possibilities = getPossibilities(sudoku,

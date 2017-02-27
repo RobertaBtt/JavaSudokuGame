@@ -1,6 +1,15 @@
 package com.npaw.sudoku;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class Sudoku {
+	
+	private HashMap<Integer, List<GameCell>> rows;
+	private HashMap<Integer, List<GameCell>> columns;
+	private HashMap<Integer, List<GameCell>> matrix;
+	
+	
 	
 	private GameCell[][] sudokuCells = null;
 	private Integer sudokuSize = 0 ;
