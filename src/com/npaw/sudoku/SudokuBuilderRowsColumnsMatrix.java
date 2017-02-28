@@ -4,7 +4,9 @@ package com.npaw.sudoku;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
@@ -15,8 +17,8 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 
 		List<String> sudokuLines = getLines(filename);
 		
-		GameCell[][] sudokuCells = buildCells(sudokuLines);
-		sudoku = new Sudoku(sudokuCells);
+		sudoku = build_Sudoku(sudokuLines);
+		//sudoku = new Sudoku(sudokuCells);
 		
 	}
 
@@ -41,77 +43,71 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 		return lines;
 	}
 	
-	private GameCell[][] buildCells(List<String> sudokuLines){
-				
-		int row = -1;
-		int column = -1;
-		int matrix = 0;
+	
+	private Sudoku build_Sudoku(List<String> sudokuLines){
+			
+		
+		int row = -1;		
+		int matrix = 0;	
 		int currentMatrix = 0;
-		
-		Row rowObject;
-		Column columnObject;
-		SudokuCell sudokuCellObject;
-		
-		
-		//First outside the cycle
-		
-		Matrix matrixObject = new Matrix();
-		
+		int columnElement = -1;
 		String[] columnString;
-		
 		List<Integer> elements;
-				
-		GameCell[][] sudokuCell = new GameCell[sudokuLines.size()][sudokuLines.size()];
-//		sudokuCell = new RowDecorator(sudokuCell);
-//		
-//		GameCell matrixDecoratorCell = new MatrixDecorator(sudokuCell);
-//		CellDecorator columnDecoratorCell = new ColumnDecorator(matrixDecorator);
-					
-		for (String line :  sudokuLines) {						
+		GameCell sudokuCellObject = null;						
+		GameCell[][] sudokuCellGrid = new GameCell[sudokuLines.size()][sudokuLines.size()];
+		
+		Sudoku sudoku = new Sudoku();
+		
+		
+		Map<Integer, List<GameCell>> rowsHashMap;
+		Map<Integer, List<GameCell>> columnsHashMap;
+		Map<Integer, List<GameCell>> matrixHashMap;
+		
+		// per ogni riga
+		for (String line :  sudokuLines) {
+			
 			row +=1;
-			rowObject = new Row();
-			
-			columnString = line.split(",");
-			
+			rowsHashMap = new HashMap<Integer, List<GameCell>>();
+						
+						
+			columnString = line.split(",");			
 			if (columnString.length > 0){
-				for (int c=0; c< columnString.length; c++){
-					
-					columnObject = new Column();
-					
-					currentMatrix = getMatrixPosition(row, c); 
-					if (matrix != currentMatrix ){
-						//I'm changing the matrix
-						matrix = currentMatrix;		
-						matrixObject = new Matrix();
-					}
-					
-					
+				
+				for (int column=0; column< columnString.length; column++){					
+										
 					elements = new ArrayList<Integer>();
-					
-					if (isStringInteger(columnString[c])){
-						column = Integer.valueOf(columnString[c]);
-						elements.add(column);
+										
+					if (isInteger(columnString[column])){
+						columnElement = Integer.valueOf(columnString[column]);
+						elements.add(columnElement);
 					} 					
 					
+					matrix = getMatrixPosition(row, column);
 					
-					//Qua passare anche columnString perché calcolo la posizione
-					//della matrice in base al numero di colonne
+					sudokuCellObject = new  SudokuCell(row, column, matrix, elements);	
+					
+					sudoku.addToRowList(row, sudokuCellObject);
+					
+					sudoku.addToColumnList(column, sudokuCellObject);
+					
+					sudoku.addToMatrixList(matrix, sudokuCellObject);
 					
 					
-					sudokuCellObject = new  SudokuCell(row+","+c+","+matrix, elements);
-					sudokuCell[row][c] = sudokuCellObject;
-					
-					rowObject.addCell(sudokuCellObject);
-					columnObject.addCell(sudokuCellObject);
-					matrixObject.addCell(sudokuCellObject);
+					//sudokuCellGrid[row][column] = sudokuCellObject;					
 					
 				}
+				
+				
+				//rowsHashMap.put(row, gameCellList);
 			}
 		}
         
-		return sudokuCell;
+		return sudoku;
 	}
 	
+	
+	
+	//TODO: no hardcode here
 	private int getMatrixPosition(int row, int column) {
 		
 		int matrixPosition = -1;
@@ -137,7 +133,8 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 		return matrixPosition;
 	}
 	
-	private boolean isStringInteger(String stringToCheck){
+	
+	private boolean isInteger(String stringToCheck){
 		
 		try{
 			Integer number = Integer.valueOf(stringToCheck);

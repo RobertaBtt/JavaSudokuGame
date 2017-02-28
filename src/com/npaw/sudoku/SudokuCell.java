@@ -5,7 +5,17 @@ import java.util.List;
 public class SudokuCell extends GameCell{
 
 		
+	//cellelements are the numbers
+	public SudokuCell(int rowId, int columnId, int matrixId, List<Integer> cellElements){
+		this.row = rowId;
+		this.column = columnId;
+		this.matrix = matrixId;
+		elements = cellElements;
+	}
+	
+	
 	public SudokuCell(String keyString, List<Integer> cellElements){
+		
 		key = keyString;
 		elements = cellElements;
 	}

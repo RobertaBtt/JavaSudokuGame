@@ -11,7 +11,7 @@ public class SudokuApplication {
 		try{
 			
 			Args arg = new Args(args);
-			String isMultiThreading = arg.isMultiThreadin();
+			//String isMultiThreading = arg.isMultiThreadin();
 			String fileNamePath = arg.getFilePath();
 			executeApplication(fileNamePath);
 				
@@ -31,7 +31,7 @@ public class SudokuApplication {
 	}
 
 	private static Sudoku buildSudoku(String filename){
-		ISudokuBuilder builder = new SudokuBuilder();
+		ISudokuBuilder builder = new SudokuBuilderRowsColumnsMatrix();
 		builder.buildSudoku(filename);
 		return builder.getSudoku();
 	}
