@@ -1,5 +1,6 @@
 package com.npaw.sudoku;
 import java.util.List;
+import java.util.Set;
 
 
 public abstract class GameCell {
@@ -14,19 +15,14 @@ public abstract class GameCell {
 		return elements;
 	}
 
-	public abstract Integer getFirstElement();
-	
-	public abstract Integer getElement();
-	
+	public abstract boolean isResolved();
+	public abstract void addElement(Integer element);
+	public abstract Integer getFirstElement();	
+	public abstract Integer getElement();	
 	public abstract int getRow();
 	public abstract int getColumn();
 	public abstract int getMatrix();	
 	
-	//public abstract Integer getFirstElement();
-//	
-//	public abstract void setElements(List<Integer> elements);
-//
-//	public abstract String getKey();
-//	
-//	public abstract void setKey(String key);
+	
+
 }

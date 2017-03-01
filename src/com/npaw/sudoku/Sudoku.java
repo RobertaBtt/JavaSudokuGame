@@ -2,6 +2,7 @@ package com.npaw.sudoku;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,9 +11,23 @@ public class Sudoku {
 	
 	
 	
-	private Map<Integer, List<GameCell>> rows;
+	private Map<Integer, List<GameCell>> rows;	
 	private Map<Integer, List<GameCell>> columns;
 	private Map<Integer, List<GameCell>> matrix;
+
+	public Map<Integer, List<GameCell>> getRows() {
+		return rows;
+	}
+	
+	public Map<Integer, List<GameCell>> getColumns() {
+		return columns;
+	}
+
+	public Map<Integer, List<GameCell>> getMatrix() {
+		return matrix;
+	}
+
+	
 	
 	public Sudoku(){
 		
@@ -60,20 +75,85 @@ public class Sudoku {
 	
 	//restituisce i numeri fratelli di una determinatata cella
 	public Set<Integer> getSiblings(GameCell gameCell){
-		int row = gameCell.getRow();
-		int column = gameCell.getColumn();
-		int matrix = gameCell.getMatrix();
 		
 		//in teoria dovrebbe essere tutti gli elementi di una riga tranne quello corrente
+		Set<Integer> siblingsRow = this.getSiblingsOfRow(gameCell);
+		Set<Integer> siblingsColumn = this.getSiblingsOfColumn(gameCell);
+		Set<Integer> siblingsMAtrix = this.getSiblingsOfMatrix(gameCell);
+		
+		Set<Integer> result = new HashSet<Integer>(siblingsRow);
+		result.addAll(siblingsColumn);
+		result.addAll(siblingsMAtrix);
+		
+		return result;
+				
+	}
+	
+	
+	
+	private Set<Integer> getSiblingsOfRow(GameCell gameCell){
+		int row = gameCell.getRow();
+		int column = gameCell.getColumn();
+		Set<Integer> siblingsByRow = new HashSet<Integer>();
+		Integer currentElement = null;
+		
 		List<GameCell> rowsSibling = this.rows.get(row);
 		
-		for (GameCell gamecell: rowsSibling){
-			
+		for (GameCell gamecellByRow: rowsSibling){
+		
+			if (gamecellByRow.column != column){
+				currentElement = gamecellByRow.getElement();
+				if (currentElement != null) 
+					siblingsByRow.add(currentElement);			
+			}
 		}
-		return null;
+		
+		return siblingsByRow;
 		
 	}
 	
+	private Set<Integer> getSiblingsOfColumn(GameCell gameCell){
+		int row = gameCell.getRow();
+		int column = gameCell.getColumn();
+		Set<Integer> siblingsByColumn = new HashSet<Integer>();
+		Integer currentElement = null;
+		
+		List<GameCell> columnSibling = this.columns.get(column);
+		
+		for (GameCell gamecellByRow: columnSibling){
+		
+			if (gamecellByRow.row != row){
+				currentElement = gamecellByRow.getElement();
+				if (currentElement != null) 
+					siblingsByColumn.add(currentElement);			
+			}
+		}
+		
+		return siblingsByColumn;
+		
+	}
+	
+	private Set<Integer> getSiblingsOfMatrix(GameCell gameCell){
+		int row = gameCell.getRow();
+		int column = gameCell.getColumn();
+		int matrix = gameCell.getMatrix();
+		Set<Integer> siblingsByMatrix = new HashSet<Integer>();
+		Integer currentElement = null;
+		
+		List<GameCell> matrixSibling = this.matrix.get(matrix);
+		
+		for (GameCell gamecellByRow: matrixSibling){
+		
+			if (gamecellByRow.row != row && gamecellByRow.column != column){
+				currentElement = gamecellByRow.getElement();
+				if (currentElement != null) 
+					siblingsByMatrix.add(currentElement);			
+			}
+		}
+		
+		return siblingsByMatrix;
+		
+	}
 	
 	
 	private GameCell[][] sudokuCells = null;
