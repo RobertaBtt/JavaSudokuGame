@@ -118,13 +118,13 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 			else if (column > 5 && column <=8){ matrixPosition = 2;}
 		}
 		
-		if (row >3 && row <=5){
+		if (row >=3 && row <=5){
 			if (column <=2){matrixPosition = 3;}
 			else if (column > 2 && column <=5){ matrixPosition = 4;}
 			else if (column > 5 && column <=8){ matrixPosition = 5;}
 		}
 		
-		if (row > 6 && row <= 8){
+		if (row >= 6 && row <= 8){
 			if (column <=2){matrixPosition = 6;}
 			else if (column > 2 && column <=5){ matrixPosition = 7;}
 			else if (column > 5 && column <=8){ matrixPosition = 8;}

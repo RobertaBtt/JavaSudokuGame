@@ -173,7 +173,7 @@ public class Sudoku {
 	}
 	
 	
-
+	
 	public void print() {
 		
 		//private Map<Integer, List<GameCell>> rows;

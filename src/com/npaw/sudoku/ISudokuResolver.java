@@ -1,6 +1,5 @@
 package com.npaw.sudoku;
 
-import java.util.List;
 
 public interface  ISudokuResolver {
 

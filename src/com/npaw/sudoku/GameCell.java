@@ -19,6 +19,7 @@ public abstract class GameCell {
 	public abstract void addElement(Integer element);
 	public abstract Integer getFirstElement();	
 	public abstract Integer getElement();	
+	public abstract void setElements(List<Integer> elements);
 	public abstract int getRow();
 	public abstract int getColumn();
 	public abstract int getMatrix();	
