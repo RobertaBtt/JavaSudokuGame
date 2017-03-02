@@ -15,7 +15,7 @@ public class SudokuBuilder implements ISudokuBuilder {
 
 		List<String> sudokuLines = getLines(filename);
 		GameCell[][] sudokuCells = buildCells(sudokuLines);
-		sudoku = new Sudoku(sudokuCells);
+		//sudoku = new Sudoku(sudokuCells);
 		
 	}
 

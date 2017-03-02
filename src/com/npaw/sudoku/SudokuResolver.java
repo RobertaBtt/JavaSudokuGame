@@ -11,7 +11,16 @@ public class SudokuResolver implements ISudokuResolver {
 	// The core of the Sudoku Application
 	public Sudoku resolveSudoku(Sudoku sudoku) {
 
+		int sudokuSize = sudoku.getSize();
+		int expectedResolvedCell = sudokuSize * sudokuSize;
 		
+		while (sudoku.getResolvedNumberCell() < expectedResolvedCell){
+			this.resolveByMatrix(sudoku);
+			this.resolveByColumn(sudoku);
+			this.resolveByRow(sudoku);
+			this.resolveByRow(sudoku);
+			this.resolveByColumn(sudoku);
+		}
 //		sudoku.print();
 		System.out.println("--------");
 		
@@ -21,21 +30,16 @@ public class SudokuResolver implements ISudokuResolver {
 //		sudoku.print();
 //		System.out.println("--------");
 
-		this.resolveByMatrix(sudoku);
-		this.resolveByColumn(sudoku);
-		this.resolveByRow(sudoku);
-		this.resolveByRow(sudoku);
+		
 		return sudoku;
 	}
 
 	private void resolveByRow(Sudoku sudoku) {
-		GameCell[][] sudokuCells = sudoku.getSudokuCells();
 
 		List<GameCell> gameCellList = null;
 		Map<Integer, List<GameCell>> rows = sudoku.getRows();
 		Set<Integer> siblings = new HashSet<Integer>();
 		List<Integer> remains = new ArrayList<Integer>();
-		int numberOfResolvedCell = 0;
 
 		if (rows != null) {
 			for (int i = 0; i < rows.size(); i++) {
@@ -43,25 +47,17 @@ public class SudokuResolver implements ISudokuResolver {
 				gameCellList = rows.get(i);
 
 				for (GameCell gamecell : gameCellList) {
+					
 					if (!gamecell.isResolved()) {
-						System.out.print("Riga " + i + "__" + "Colonna --->"
-								+ gamecell.getColumn());
-
+						
 						siblings = sudoku.getSiblings(gamecell);
-						remains = this.getRemains(siblings, 10);
+						remains = this.getRemains(siblings, sudoku.getSize() + 1);
 
 						if (remains.size() == 1) {
 							gamecell.addElement(remains.get(0));
-						}
-						for (Integer s : remains) {
-							System.out.print(" " + s);
-						}
-						System.out.println();
-					} else {
-						numberOfResolvedCell += 1;
-
-					}
-
+							sudoku.incrementResolvedCell();
+						}						
+					} 
 				}
 
 			}
@@ -71,13 +67,11 @@ public class SudokuResolver implements ISudokuResolver {
 	}
 
 	private void resolveByColumn(Sudoku sudoku) {
-		GameCell[][] sudokuCells = sudoku.getSudokuCells();
 
 		List<GameCell> gameCellList = null;
 		Map<Integer, List<GameCell>> columns = sudoku.getColumns();
 		Set<Integer> siblings = new HashSet<Integer>();
 		List<Integer> remains = new ArrayList<Integer>();
-		int numberOfResolvedCell = 0;
 
 		if (columns != null) {
 			for (int i = 0; i < columns.size(); i++) {
@@ -85,25 +79,17 @@ public class SudokuResolver implements ISudokuResolver {
 				gameCellList = columns.get(i);
 
 				for (GameCell gamecell : gameCellList) {
-					if (!gamecell.isResolved()) {
-						System.out.print("Riga " + i + "__" + "Colonna --->"
-								+ gamecell.getColumn());
+					if (!gamecell.isResolved()) {						
 
 						siblings = sudoku.getSiblings(gamecell);
-						remains = this.getRemains(siblings, 10);
+						remains = this.getRemains(siblings, sudoku.getSize() + 1);
 
 						if (remains.size() == 1) {
 							gamecell.addElement(remains.get(0));
+							sudoku.incrementResolvedCell();
 						}
-						for (Integer s : remains) {
-							System.out.print(" " + s);
-						}
-						System.out.println();
-					} else {
-						numberOfResolvedCell += 1;
-
-					}
-
+						
+					} 
 				}
 
 			}
@@ -118,7 +104,6 @@ public class SudokuResolver implements ISudokuResolver {
 		Map<Integer, List<GameCell>> matrix = sudoku.getMatrix();
 		Set<Integer> siblings = new HashSet<Integer>();
 		List<Integer> remains = new ArrayList<Integer>();
-		int numberOfResolvedCell = 0;
 
 		if (matrix != null) {
 			for (int i = 0; i < matrix.size(); i++) {
@@ -127,22 +112,16 @@ public class SudokuResolver implements ISudokuResolver {
 
 				for (GameCell gamecell : gameCellList) {
 					if (!gamecell.isResolved()) {
-						System.out.print("Matrice " + i);
 
 						siblings = sudoku.getSiblings(gamecell);
-						remains = this.getRemains(siblings, 10);
+						remains = this.getRemains(siblings, sudoku.getSize() + 1);
 
 						if (remains.size() == 1) {
 							gamecell.addElement(remains.get(0));
+							sudoku.incrementResolvedCell();
 						}
-						for (Integer s : remains) {
-							System.out.print(" " + s);
-						}
-						System.out.println();
-					} else {
-						numberOfResolvedCell += 1;
-
-					}
+						
+					} 
 
 				}
 

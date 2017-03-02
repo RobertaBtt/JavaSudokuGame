@@ -14,7 +14,24 @@ public class Sudoku {
 	private Map<Integer, List<GameCell>> rows;	
 	private Map<Integer, List<GameCell>> columns;
 	private Map<Integer, List<GameCell>> matrix;
-
+	
+	private int size;
+	private int resolvedCell;
+	
+	
+	public Sudoku(int size){		
+		
+		this.rows = new HashMap<Integer, List<GameCell>>();
+		this.columns = new HashMap<Integer, List<GameCell>>();
+		this.matrix = new HashMap<Integer, List<GameCell>>();
+		this.resolvedCell = 0;
+		this.size = size;
+	}
+	
+	public int getSize(){
+		return size;
+	}
+	
 	public Map<Integer, List<GameCell>> getRows() {
 		return rows;
 	}
@@ -25,17 +42,15 @@ public class Sudoku {
 
 	public Map<Integer, List<GameCell>> getMatrix() {
 		return matrix;
-	}
-
+	}	
 	
-	
-	public Sudoku(){
-		
-		this.rows = new HashMap<Integer, List<GameCell>>();
-		this.columns = new HashMap<Integer, List<GameCell>>();
-		this.matrix = new HashMap<Integer, List<GameCell>>();
+	public void incrementResolvedCell(){
+		this.resolvedCell +=1;
 	}
 	
+	public int getResolvedNumberCell(){
+		return this.resolvedCell;
+	}
 	
 	public void addToRowList(int rowId, GameCell gameCell){
 		
@@ -155,22 +170,8 @@ public class Sudoku {
 		
 	}
 	
-	
-	private GameCell[][] sudokuCells = null;
-	private Integer sudokuSize = 0 ;
-	
-	public Sudoku(GameCell[][] sudokuCells){
-		this.sudokuCells = sudokuCells;
-		this.sudokuSize = sudokuCells[0].length;
-	}
-	
-	public GameCell[][] getSudokuCells() {
-		return this.sudokuCells;
-	}
 
-	public Integer getSize(){
-		return sudokuSize;
-	}
+	
 	
 	
 	

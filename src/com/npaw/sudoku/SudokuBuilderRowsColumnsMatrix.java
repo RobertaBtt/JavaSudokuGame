@@ -49,14 +49,13 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 		
 		int row = -1;		
 		int matrix = 0;	
-		int currentMatrix = 0;
 		int columnElement = -1;
 		String[] columnString;
 		List<Integer> elements;
 		GameCell sudokuCellObject = null;						
-		GameCell[][] sudokuCellGrid = new GameCell[sudokuLines.size()][sudokuLines.size()];
 		
-		Sudoku sudoku = new Sudoku();
+		int sudokuSize = sudokuLines.size();
+		Sudoku sudoku = new Sudoku(sudokuSize);		
 		
 		
 		Map<Integer, List<GameCell>> rowsHashMap;
@@ -78,27 +77,26 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 					elements = new ArrayList<Integer>();
 										
 					if (isInteger(columnString[column])){
+						
 						columnElement = Integer.valueOf(columnString[column]);
-						elements.add(columnElement);
+						if (isInTheRange(columnElement, sudokuSize )){
+							elements.add(columnElement);
+							sudoku.incrementResolvedCell();
+						}
+						
 					} 					
 					
 					matrix = getMatrixPosition(row, column);
 					
 					sudokuCellObject = new  SudokuCell(row, column, matrix, elements);	
 					
-					sudoku.addToRowList(row, sudokuCellObject);
 					
-					sudoku.addToColumnList(column, sudokuCellObject);
+					sudoku.addToRowList(row, sudokuCellObject);					
+					sudoku.addToColumnList(column, sudokuCellObject);					
+					sudoku.addToMatrixList(matrix, sudokuCellObject);									
 					
-					sudoku.addToMatrixList(matrix, sudokuCellObject);
-					
-					
-					//sudokuCellGrid[row][column] = sudokuCellObject;					
-					
-				}
+				}	
 				
-				
-				//rowsHashMap.put(row, gameCellList);
 			}
 		}
         
@@ -143,6 +141,13 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 			return false;
 		}
 		return true;
+	}
+	
+	
+	private boolean isInTheRange(int numberToCheck, int maxRange){
+		
+		if (numberToCheck >=1 && numberToCheck <=maxRange) return true;
+		return false;
 	}
 	
 }
