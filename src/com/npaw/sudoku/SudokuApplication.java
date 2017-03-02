@@ -11,9 +11,10 @@ public class SudokuApplication {
 		try{
 			
 			Args arg = new Args(args);
-			//String isMultiThreading = arg.isMultiThreadin();
+			String isMultiThreading = arg.isMultiThreadin();
 			String fileNamePath = arg.getFilePath();
-			executeApplication(fileNamePath);
+			
+			executeApplication(fileNamePath, isMultiThreading);
 				
 		}
 		catch(ArgsException e){
@@ -22,10 +23,10 @@ public class SudokuApplication {
 		
 	}
 	
-	private static void executeApplication(String filename){
+	private static void executeApplication(String filename, String isMultiThreading){
 		Sudoku sudoku = buildSudoku(filename);
 		sudoku.print();
-		Sudoku resolvedSudoku = resolveSudoku(sudoku);
+		Sudoku resolvedSudoku = resolveSudoku(sudoku, isMultiThreading);
 		resolvedSudoku.print();
 		
 	}
@@ -36,9 +37,9 @@ public class SudokuApplication {
 		return builder.getSudoku();
 	}
 	
-	private static Sudoku resolveSudoku(Sudoku sudoku){
+	private static Sudoku resolveSudoku(Sudoku sudoku, String isMultiThreading){
 		ISudokuResolver sudokuResolver = new SudokuResolver();
-		Sudoku resolvedSudoku = sudokuResolver.resolveSudoku(sudoku);
+		Sudoku resolvedSudoku = sudokuResolver.resolveSudoku(sudoku, isMultiThreading);
 		return resolvedSudoku;
 	}
 	

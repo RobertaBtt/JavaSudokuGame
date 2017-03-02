@@ -9,120 +9,89 @@ import java.util.Set;
 public class SudokuResolver implements ISudokuResolver {
 
 	// The core of the Sudoku Application
-	public Sudoku resolveSudoku(Sudoku sudoku) {
+	public Sudoku resolveSudoku(Sudoku sudoku, String isMultiThreading) {
 
 		int sudokuSize = sudoku.getSize();
 		int expectedResolvedCell = sudokuSize * sudokuSize;
+		boolean isMultiThread = toBoolean(isMultiThreading);
 		
-		while (sudoku.getResolvedNumberCell() < expectedResolvedCell){
-			this.resolveByMatrix(sudoku);
-			this.resolveByColumn(sudoku);
-			this.resolveByRow(sudoku);
-			this.resolveByRow(sudoku);
-			this.resolveByColumn(sudoku);
-		}
-//		sudoku.print();
-		System.out.println("--------");
-		
-//		sudoku.print();
-		System.out.println("--------");
-		
-//		sudoku.print();
-//		System.out.println("--------");
+		if (isMultiThread) {
+			System.out.print("MultiThread");
+			// return resolveMultiThreading(sudoku);
+		} else {
+			System.out.print("Uno solo");
+			while (sudoku.getResolvedNumberCell() < expectedResolvedCell) {
+				System.out.println(sudoku.getResolvedNumberCell());
+				this.resolveByMatrix(sudoku);
+				// this.resolveByColumn(sudoku);
+				// this.resolveByRow(sudoku);
+				// this.resolveByRow(sudoku);
+				// this.resolveByColumn(sudoku);
+			}
 
+		}
 		
+
 		return sudoku;
+	}
+
+	private boolean toBoolean(String stringToCheck) {
+
+		if (stringToCheck.equals("0")) return false;
+		else if (stringToCheck.equals("1")) return true;
+		else return false;
+		
 	}
 
 	private void resolveByRow(Sudoku sudoku) {
 
-		List<GameCell> gameCellList = null;
 		Map<Integer, List<GameCell>> rows = sudoku.getRows();
-		Set<Integer> siblings = new HashSet<Integer>();
-		List<Integer> remains = new ArrayList<Integer>();
-
-		if (rows != null) {
-			for (int i = 0; i < rows.size(); i++) {
-
-				gameCellList = rows.get(i);
-
-				for (GameCell gamecell : gameCellList) {
-					
-					if (!gamecell.isResolved()) {
-						
-						siblings = sudoku.getSiblings(gamecell);
-						remains = this.getRemains(siblings, sudoku.getSize() + 1);
-
-						if (remains.size() == 1) {
-							gamecell.addElement(remains.get(0));
-							sudoku.incrementResolvedCell();
-						}						
-					} 
-				}
-
-			}
-
-		}
+		computeElements(sudoku, rows);
 
 	}
 
 	private void resolveByColumn(Sudoku sudoku) {
 
-		List<GameCell> gameCellList = null;
 		Map<Integer, List<GameCell>> columns = sudoku.getColumns();
+		computeElements(sudoku, columns);
+
 		Set<Integer> siblings = new HashSet<Integer>();
 		List<Integer> remains = new ArrayList<Integer>();
-
-		if (columns != null) {
-			for (int i = 0; i < columns.size(); i++) {
-
-				gameCellList = columns.get(i);
-
-				for (GameCell gamecell : gameCellList) {
-					if (!gamecell.isResolved()) {						
-
-						siblings = sudoku.getSiblings(gamecell);
-						remains = this.getRemains(siblings, sudoku.getSize() + 1);
-
-						if (remains.size() == 1) {
-							gamecell.addElement(remains.get(0));
-							sudoku.incrementResolvedCell();
-						}
-						
-					} 
-				}
-
-			}
-
-		}
 
 	}
-	
+
 	private void resolveByMatrix(Sudoku sudoku) {
 
-		List<GameCell> gameCellList = null;
 		Map<Integer, List<GameCell>> matrix = sudoku.getMatrix();
+		computeElements(sudoku, matrix);
+
+	}
+
+	private void computeElements(Sudoku sudoku,
+			Map<Integer, List<GameCell>> elements) {
+
+		List<GameCell> gameCellList = null;
 		Set<Integer> siblings = new HashSet<Integer>();
 		List<Integer> remains = new ArrayList<Integer>();
 
-		if (matrix != null) {
-			for (int i = 0; i < matrix.size(); i++) {
+		if (elements != null) {
+			for (int i = 0; i < elements.size(); i++) {
 
-				gameCellList = matrix.get(i);
+				gameCellList = elements.get(i);
 
 				for (GameCell gamecell : gameCellList) {
+
 					if (!gamecell.isResolved()) {
 
 						siblings = sudoku.getSiblings(gamecell);
-						remains = this.getRemains(siblings, sudoku.getSize() + 1);
+						remains = this.getRemains(siblings,
+								sudoku.getSize() + 1);
 
 						if (remains.size() == 1) {
 							gamecell.addElement(remains.get(0));
 							sudoku.incrementResolvedCell();
 						}
-						
-					} 
-
+					}
 				}
 
 			}
@@ -130,7 +99,7 @@ public class SudokuResolver implements ISudokuResolver {
 		}
 
 	}
-	
+
 	private List<Integer> getRemains(Set<Integer> integerSet, int maxNumber) {
 
 		List<Integer> remainsNumbers = new ArrayList<Integer>();
