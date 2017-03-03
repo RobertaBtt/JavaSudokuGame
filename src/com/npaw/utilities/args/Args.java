@@ -41,7 +41,7 @@ public class Args {
 		
 	}
 	
-	public String isMultiThreadin(){
+	public String isMultiThreading(){
 		return multiThreading;
 	}
 	

@@ -15,7 +15,6 @@ public class SudokuBuilder implements ISudokuBuilder {
 
 		List<String> sudokuLines = getLines(filename);
 		GameCell[][] sudokuCells = buildCells(sudokuLines);
-		//sudoku = new Sudoku(sudokuCells);
 		
 	}
 
@@ -70,15 +69,10 @@ public class SudokuBuilder implements ISudokuBuilder {
 						elements.add(column);
 					} 					
 					
-					//Qua passare anche columnString perché calcolo la posizione
-					//della matrice in base al numero di colonne
 					
-					matrix = getMatrixPosition(row, c);
-					
+					matrix = getMatrixPosition(row, c);					
 					sudokuCell[row][c] = new  SudokuCell(row+","+c+","+matrix, elements);
-					//sudokuCell[row][c] = new RowDecorator(sudokuCell[row][c]);
-					//sudokuCell[row][c] = new ColumnDecorator(sudokuCell[row][c]);
-					//sudokuCell[row][c] = new MatrixDecorator(sudokuCell[row][c]);
+					
 				}
 			}
 		}

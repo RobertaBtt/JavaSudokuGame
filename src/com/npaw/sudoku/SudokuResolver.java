@@ -12,21 +12,48 @@ public class SudokuResolver implements ISudokuResolver {
 	public Sudoku resolveSudoku(Sudoku sudoku, String isMultiThreading) {
 
 		int sudokuSize = sudoku.getSize();
-		int expectedResolvedCell = sudokuSize * sudokuSize;
+
 		boolean isMultiThread = toBoolean(isMultiThreading);
 		
 		if (isMultiThread) {
-			System.out.print("MultiThread");
-			// return resolveMultiThreading(sudoku);
-		} else {
-			System.out.print("Uno solo");
+			List<Thread> threads = new ArrayList<Thread>();
+			Thread thread;
+			int expectedResolvedCell = sudokuSize * sudokuSize;
+			
 			while (sudoku.getResolvedNumberCell() < expectedResolvedCell) {
-				System.out.println(sudoku.getResolvedNumberCell());
-				this.resolveByMatrix(sudoku);
-				// this.resolveByColumn(sudoku);
-				// this.resolveByRow(sudoku);
-				// this.resolveByRow(sudoku);
-				// this.resolveByColumn(sudoku);
+				
+				if(sudoku.getResolvedNumberCell() %2 == 0)
+					thread = new ResolveByColumnsThread(sudoku);									
+				
+				else
+					thread = new ResolveByColumnsThread(sudoku);					
+				
+					
+					threads.add(thread);
+					thread.start();	
+			}
+			
+			System.out.print("Threads created: " + threads.size() + "\n");
+			
+			try {
+				for (Thread currentThread : threads){
+					currentThread.join();
+				}
+				
+			} catch (Exception e) {
+				System.out.println("Interrupted" + e.getMessage());
+			}
+			
+			
+		} else {
+			
+			ResolveByRowsThread thread = new ResolveByRowsThread(sudoku);
+			thread.start();
+			
+			try {
+				thread.join();
+			} catch (Exception e) {
+				System.out.println("Interrupted" + e.getMessage());
 			}
 
 		}
@@ -34,6 +61,7 @@ public class SudokuResolver implements ISudokuResolver {
 
 		return sudoku;
 	}
+	
 
 	private boolean toBoolean(String stringToCheck) {
 
@@ -43,29 +71,11 @@ public class SudokuResolver implements ISudokuResolver {
 		
 	}
 
-	private void resolveByRow(Sudoku sudoku) {
+	
 
-		Map<Integer, List<GameCell>> rows = sudoku.getRows();
-		computeElements(sudoku, rows);
+	
 
-	}
-
-	private void resolveByColumn(Sudoku sudoku) {
-
-		Map<Integer, List<GameCell>> columns = sudoku.getColumns();
-		computeElements(sudoku, columns);
-
-		Set<Integer> siblings = new HashSet<Integer>();
-		List<Integer> remains = new ArrayList<Integer>();
-
-	}
-
-	private void resolveByMatrix(Sudoku sudoku) {
-
-		Map<Integer, List<GameCell>> matrix = sudoku.getMatrix();
-		computeElements(sudoku, matrix);
-
-	}
+	
 
 	private void computeElements(Sudoku sudoku,
 			Map<Integer, List<GameCell>> elements) {

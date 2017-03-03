@@ -1,6 +1,5 @@
 package com.npaw.sudoku;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -15,11 +14,8 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 	
 	public void buildSudoku(String filename) {
 
-		List<String> sudokuLines = getLines(filename);
-		
-		sudoku = build_Sudoku(sudokuLines);
-		//sudoku = new Sudoku(sudokuCells);
-		
+		List<String> sudokuLines = getLines(filename);		
+		sudoku = build_Sudoku(sudokuLines);		
 	}
 
 	public Sudoku getSudoku() {
@@ -62,7 +58,7 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 		Map<Integer, List<GameCell>> columnsHashMap;
 		Map<Integer, List<GameCell>> matrixHashMap;
 		
-		// per ogni riga
+		// for every line
 		for (String line :  sudokuLines) {
 			
 			row +=1;
@@ -135,7 +131,7 @@ public class SudokuBuilderRowsColumnsMatrix implements ISudokuBuilder {
 	private boolean isInteger(String stringToCheck){
 		
 		try{
-			Integer number = Integer.valueOf(stringToCheck);
+			Integer.valueOf(stringToCheck);
 		}
 		catch(Exception ex){
 			return false;

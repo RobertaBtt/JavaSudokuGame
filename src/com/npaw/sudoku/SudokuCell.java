@@ -1,7 +1,6 @@
 package com.npaw.sudoku;
 
 import java.util.List;
-import java.util.Set;
 
 public class SudokuCell extends GameCell{
 
@@ -47,14 +46,7 @@ public class SudokuCell extends GameCell{
 		this.elements = elements;
 	}
 	
-	public String getKey() {
-		return key;
-	}
 	
-	public void setKey(String key) {
-		this.key = key;
-	}
-
 
 	@Override
 	public Integer getElement() {

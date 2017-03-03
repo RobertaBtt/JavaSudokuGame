@@ -8,10 +8,9 @@ public class SudokuApplication {
 
 	public static void main(String[] args) {
 		
-		try{
-			
+		try{			
 			Args arg = new Args(args);
-			String isMultiThreading = arg.isMultiThreadin();
+			String isMultiThreading = arg.isMultiThreading();
 			String fileNamePath = arg.getFilePath();
 			
 			executeApplication(fileNamePath, isMultiThreading);
@@ -25,8 +24,10 @@ public class SudokuApplication {
 	
 	private static void executeApplication(String filename, String isMultiThreading){
 		Sudoku sudoku = buildSudoku(filename);
+		System.out.println("---------");
 		sudoku.print();
 		Sudoku resolvedSudoku = resolveSudoku(sudoku, isMultiThreading);
+		System.out.println("--resolved--");
 		resolvedSudoku.print();
 		
 	}
