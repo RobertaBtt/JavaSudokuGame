@@ -108,7 +108,7 @@ public class SudokuBuilder implements ISudokuBuilder {
 	private boolean isStringInteger(String stringToCheck){
 		
 		try{
-			Integer number = Integer.valueOf(stringToCheck);
+			Integer.valueOf(stringToCheck);
 		}
 		catch(Exception ex){
 			return false;

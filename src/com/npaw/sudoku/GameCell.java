@@ -1,6 +1,5 @@
 package com.npaw.sudoku;
 import java.util.List;
-import java.util.Set;
 
 
 public abstract class GameCell {
