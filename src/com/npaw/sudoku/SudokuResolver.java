@@ -1,129 +1,126 @@
 package com.npaw.sudoku;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SudokuResolver implements ISudokuResolver {
 
-	//The core of the Sudoku Application
-	public Sudoku resolveSudoku(Sudoku sudoku) {
+	// The core of the Sudoku Application
+	public Sudoku resolveSudoku(Sudoku sudoku, String isMultiThreading) {
 
-		GameCell[][] sudokuCells = sudoku.getSudokuCells();
+		int sudokuSize = sudoku.getSize();
 
-		if (sudokuCells != null) {
+		boolean isMultiThread = toBoolean(isMultiThreading);
+		
+		if (isMultiThread) {
+			List<Thread> threads = new ArrayList<Thread>();
+			Thread thread;
+			int expectedResolvedCell = sudokuSize * sudokuSize;
 			
-			for (int r = 0; r < sudokuCells.length; r++) {
-				for (int c = 0; c < sudokuCells.length; c++) {
-
-					if (sudokuCells[r][c].getElement() == null) {
-						
-						//Se per ogni cella, elemento é null
-						//vuol dire che ancora non ho risolto per 
-						//quella cella
-						
-						//Allora richiamo un metodo che é risolvi La cella
-						//che dovrebbe essere ricorsivo
-						
-						//vai avanti finché sudoku non é resolved.
-						//potrebbe essereun evento, con i sottoscrittori dell'evento ? : (
-						//non lo so...
-						
-
-						List<Integer> possibilities = getPossibilities(sudoku,
-								sudokuCells[r][c], sudokuCells);
-					}
-				}
-				System.out.println();
+			while (sudoku.getResolvedNumberCell() < expectedResolvedCell) {
+				
+				if(sudoku.getResolvedNumberCell() %2 == 0)
+					thread = new ResolveByColumnsThread(sudoku);									
+				
+				else
+					thread = new ResolveByColumnsThread(sudoku);					
+				
+					
+					threads.add(thread);
+					thread.start();	
 			}
-		}
+			
+			System.out.print("Threads created: " + threads.size() + "\n");
+			
+			try {
+				for (Thread currentThread : threads){
+					currentThread.join();
+				}
+				
+			} catch (Exception e) {
+				System.out.println("Interrupted" + e.getMessage());
+			}
+			
+			
+		} else {
+			
+			ResolveByRowsThread thread = new ResolveByRowsThread(sudoku);
+			thread.start();
+			
+			try {
+				thread.join();
+			} catch (Exception e) {
+				System.out.println("Interrupted" + e.getMessage());
+			}
 
-		return null;
+		}
+		
+
+		return sudoku;
 	}
 	
 
-	public List<Integer> getSiblingsofACell(Sudoku sudoku, GameCell sudokuCell ) {
+	private boolean toBoolean(String stringToCheck) {
 
-		List<Integer> rowSiblings = new ArrayList<Integer>();
+		if (stringToCheck.equals("0")) return false;
+		else if (stringToCheck.equals("1")) return true;
+		else return false;
+		
+	}
 
 	
-		return rowSiblings;
-	}
+
 	
-	public List<Integer> getSiblingsOfRow(Sudoku sudoku, GameCell sudokuCell, GameCell[][] sudokuCells) {
 
-		List<Integer> rowSiblings = new ArrayList<Integer>();
+	
 
-		for (int c = 0; c < sudoku.getSize(); c++) {
-			if (c != sudokuCell.getColumn()) {
+	private void computeElements(Sudoku sudoku,
+			Map<Integer, List<GameCell>> elements) {
 
-				Integer element = sudokuCells[sudokuCell.getRow()][c]
-						.getElement();
-				if (element != null) {
-					rowSiblings.add(element);
-				}
-			}
-		}
-		return rowSiblings;
-	}
+		List<GameCell> gameCellList = null;
+		Set<Integer> siblings = new HashSet<Integer>();
+		List<Integer> remains = new ArrayList<Integer>();
 
-	public List<Integer> getSiblingsOfColumn(Sudoku sudoku, GameCell sudokuCell, GameCell[][] sudokuCells) {
+		if (elements != null) {
+			for (int i = 0; i < elements.size(); i++) {
 
-		List<Integer> rowSiblings = new ArrayList<Integer>();
+				gameCellList = elements.get(i);
 
-		for (int r = 0; r < sudoku.getSize(); r++) {
-			if (r != sudokuCell.getRow()) {
-				Integer element = sudokuCells[r][sudokuCell.getColumn()]
-						.getElement();
-				if (element != null) {
-					rowSiblings.add(element);
-				}
-			}
-		}
-		return rowSiblings;
-	}
+				for (GameCell gamecell : gameCellList) {
 
-	public List<Integer> getSiblingsOfMatrix(Sudoku sudoku, GameCell sudokuCell, GameCell[][] sudokuCells) {
+					if (!gamecell.isResolved()) {
 
-		List<Integer> rowSiblings = new ArrayList<Integer>();
+						siblings = sudoku.getSiblings(gamecell);
+						remains = this.getRemains(siblings,
+								sudoku.getSize() + 1);
 
-		for (int r = 0; r < sudoku.getSize(); r++) {
-			for (int c = 0; c < sudoku.getSize(); c++) {
-
-				if (sudokuCell.getMatrix() == sudokuCells[r][c].getMatrix()) {
-					if (!(r == sudokuCell.getRow() && (c == sudokuCell.getColumn()))) {
-						Integer element = sudokuCells[r][c].getElement();
-						if (element != null) {
-							rowSiblings.add(element);
+						if (remains.size() == 1) {
+							gamecell.addElement(remains.get(0));
+							sudoku.incrementResolvedCell();
 						}
 					}
-
 				}
+
 			}
 
 		}
-		return rowSiblings;
 
 	}
 
-	public Sudoku resolveSudoku() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private List<Integer> getRemains(Set<Integer> integerSet, int maxNumber) {
 
-	public Sudoku sudoku() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		List<Integer> remainsNumbers = new ArrayList<Integer>();
 
-	
+		for (int i = 1; i < maxNumber; i++) {
+			if (!integerSet.contains(i))
+				remainsNumbers.add(i);
+		}
 
-	private List<Integer> getPossibilities(Sudoku sudoku, GameCell gameCell, GameCell[][] gameCells) {
-		List<Integer> siblings = this.getSiblingsofACell(sudoku, gameCell);
-		List<Integer> siblingsOfRow = this.getSiblingsOfRow(sudoku, gameCell, gameCells);
-		List<Integer> siblingsOfColumn = this.getSiblingsOfColumn(sudoku, gameCell, gameCells);
-		//List<Integer> siblingsOfMatrix = this.getSiblingsOfMatrix(sudoku, gameCell, gameCells);
+		return remainsNumbers;
 
-		return null;
 	}
 
 }

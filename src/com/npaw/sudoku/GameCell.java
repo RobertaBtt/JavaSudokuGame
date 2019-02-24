@@ -14,19 +14,15 @@ public abstract class GameCell {
 		return elements;
 	}
 
-	public abstract Integer getFirstElement();
-	
-	public abstract Integer getElement();
-	
+	public abstract boolean isResolved();
+	public abstract void addElement(Integer element);
+	public abstract Integer getFirstElement();	
+	public abstract Integer getElement();	
+	public abstract void setElements(List<Integer> elements);
 	public abstract int getRow();
 	public abstract int getColumn();
 	public abstract int getMatrix();	
 	
-	//public abstract Integer getFirstElement();
-//	
-//	public abstract void setElements(List<Integer> elements);
-//
-//	public abstract String getKey();
-//	
-//	public abstract void setKey(String key);
+	
+
 }

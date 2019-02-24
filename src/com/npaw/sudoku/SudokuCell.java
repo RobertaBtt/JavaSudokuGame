@@ -5,11 +5,34 @@ import java.util.List;
 public class SudokuCell extends GameCell{
 
 		
+	//cellElements are the numbers
+	public SudokuCell(int rowId, int columnId, int matrixId, List<Integer> numbers){
+		this.row = rowId;
+		this.column = columnId;
+		this.matrix = matrixId;
+		elements = numbers;
+	}
+	
+	
+	//deprecated
 	public SudokuCell(String keyString, List<Integer> cellElements){
+		
 		key = keyString;
 		elements = cellElements;
 	}
 	
+	@Override
+	public boolean isResolved(){
+		if (elements.size() == 1){
+			return true;
+		}
+		return false;
+		
+	}
+	
+	public void addElement(Integer element){
+		elements.add(element);
+	}
 	
 	public Integer getFirstElement() {
 		if (elements.size()>0){
@@ -23,14 +46,7 @@ public class SudokuCell extends GameCell{
 		this.elements = elements;
 	}
 	
-	public String getKey() {
-		return key;
-	}
 	
-	public void setKey(String key) {
-		this.key = key;
-	}
-
 
 	@Override
 	public Integer getElement() {
@@ -47,18 +63,18 @@ public class SudokuCell extends GameCell{
 
 	@Override
 	public int getRow() {
-		return Integer.valueOf(key.substring(0,1));
+		return this.row;
 	}
 
 
 	@Override
 	public int getColumn() {		
-		return Integer.valueOf(key.substring(2,3));
+		return this.column;
 	} 
 	
 	@Override
 	public int getMatrix() {		
-		return Integer.valueOf(key.substring(4,5));
+		return this.matrix;
 	} 
 		
 }
