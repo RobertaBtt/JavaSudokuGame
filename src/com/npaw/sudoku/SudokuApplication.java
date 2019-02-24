@@ -25,8 +25,8 @@ public class SudokuApplication {
 	private static void executeApplication(String filename){
 		Sudoku sudoku = buildSudoku(filename);
 		sudoku.print();
-//		Sudoku resolvedSudoku = resolveSudoku(sudoku);
-//		resolvedSudoku.print();
+		Sudoku resolvedSudoku = resolveSudoku(sudoku);
+		resolvedSudoku.print();
 		
 	}
 
